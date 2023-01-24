@@ -2,20 +2,16 @@ import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+import PhoneBookList from './PhoneBookList/PhoneBookList';
+import PhoneBookFilter from './PhoneBookFilter/PhoneBookFilter';
+import PhoneBooksForm from './PhoneBookForm/PhoneBookForm';
+
 import {
   MainSection,
-  PhoneBookTitle,
-  NameTitle,
   FormBox,
-  PhoneBookForm,
-  Input,
-  AddBtn,
+  PhoneBookTitle,
   ContactsBox,
   ContactsTitle,
-  ContactItem,
-  RemoveBtn,
-  FilterBox,
-  ContactsList,
 } from './App.styled';
 
 class App extends Component {
@@ -27,32 +23,35 @@ class App extends Component {
       { id: nanoid(), name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
 
-  handleChange = ({ target }) => {
-    const { name, value } = target;
-    this.setState({
-      [name]: value,
+  addContacts = ({ name, number }) => {
+    if (this.isDuplicate(name, number)) {
+      return Notify.failure(`'${name} is already exist'`);
+    }
+
+    this.setState(prevState => {
+      const { contacts } = prevState;
+
+      const newContact = {
+        id: nanoid(),
+        name,
+        number,
+      };
+
+      return { contacts: [newContact, ...contacts] };
+    });
+    return true;
+  };
+
+  removeContacts = id => {
+    this.setState(({ contacts }) => {
+      const newContacts = contacts.filter(item => item.id !== id);
+      return { contacts: newContacts };
     });
   };
 
-  isDuplicate(name, number) {
-    const normalizedName = name.toLowerCase();
-    const normalizedNumber = number.toLowerCase();
-    const { contacts } = this.state;
-    const result = contacts.find(({ name, number }) => {
-      return (
-        name.toLowerCase() === normalizedName &&
-        number.toLowerCase() === normalizedNumber
-      );
-    });
-
-    return Boolean(result);
-  }
-
-  getFilteredBooks() {
+  getFilteredContacts() {
     const { filter, contacts } = this.state;
     if (!filter) {
       return contacts;
@@ -69,86 +68,42 @@ class App extends Component {
     return result;
   }
 
-  removeBook = id => {
-    this.setState(({ contacts }) => {
-      const newBooks = contacts.filter(item => item.id !== id);
-      return { contacts: newBooks };
+  isDuplicate(name, number) {
+    const normalizedName = name.toLowerCase();
+    const normalizedNumber = number.toLowerCase();
+    const { contacts } = this.state;
+    const result = contacts.find(({ name, number }) => {
+      return (
+        name.toLowerCase() === normalizedName &&
+        number.toLowerCase() === normalizedNumber
+      );
     });
-  };
 
-  addBook = e => {
-    e.preventDefault();
-    const { name, number } = this.state;
-    if (this.isDuplicate(name, number)) {
-      return Notify.failure(`'${name} is already exist'`);
-    }
+    return Boolean(result);
+  }
 
-    this.setState(prevState => {
-      const { name, number, contacts } = prevState;
-
-      const newContact = {
-        id: nanoid(),
-        name,
-        number,
-      };
-
-      return { contacts: [newContact, ...contacts], name: '', number: '' };
-    });
+  handleFilter = ({ target }) => {
+    this.setState({ filter: target.value });
   };
 
   render() {
-    const { addBook, handleChange } = this;
-    const { name, number } = this.state;
-    const items = this.getFilteredBooks();
-
-    const contacts = items.map(({ id, name, number }) => (
-      <ContactItem key={id}>
-        {name}: {number}
-        <RemoveBtn onClick={() => this.removeBook(id)} type="button">
-          Delete
-        </RemoveBtn>
-      </ContactItem>
-    ));
+    const { addContacts, removeContacts, handleFilter } = this;
+    const items = this.getFilteredContacts();
+    const isBooks = Boolean(items.length);
 
     return (
       <MainSection>
         <FormBox>
           <PhoneBookTitle>Phonebook</PhoneBookTitle>
-          <PhoneBookForm action="" onSubmit={addBook}>
-            <div>
-              <NameTitle>Name</NameTitle>
-              <Input
-                type="text"
-                name="name"
-                value={name}
-                onChange={handleChange}
-                pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-                title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-                required
-              />
-            </div>
-            <div>
-              <NameTitle>Number</NameTitle>
-              <Input
-                type="tel"
-                name="number"
-                value={number}
-                onChange={handleChange}
-                pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-                title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-                required
-              />
-            </div>
-            <AddBtn type="submit">Add contact</AddBtn>
-          </PhoneBookForm>
+          <PhoneBooksForm onSubmit={addContacts} />
         </FormBox>
         <ContactsBox>
           <ContactsTitle>Contacts</ContactsTitle>
-          <FilterBox>
-            <label>Find contacts by name</label>
-            <Input name="filter" onChange={handleChange} />
-          </FilterBox>
-          <ContactsList>{contacts}</ContactsList>
+          <PhoneBookFilter handleChange={handleFilter} />
+          {isBooks && (
+            <PhoneBookList items={items} removeContacts={removeContacts} />
+          )}
+          {!isBooks && <p>No contacts in list</p>}
         </ContactsBox>
       </MainSection>
     );
