@@ -144,7 +144,7 @@ class App extends Component {
           <ContactsTitle>Contacts</ContactsTitle>
           <FilterBox>
             <label>Find contacts by name</label>
-            <input name="filter" onChange={handleChange} />
+            <Input name="filter" onChange={handleChange} />
           </FilterBox>
           <ul>{contacts}</ul>
         </ContactsBox>

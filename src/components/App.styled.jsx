@@ -23,6 +23,7 @@ const FormBox = styled.div`
 `;
 
 const Input = styled.input`
+  width: 177px;
   margin-bottom: 15px;
 `;
 
