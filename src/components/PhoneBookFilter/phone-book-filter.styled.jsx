@@ -7,6 +7,8 @@ const FilterBox = styled.div`
   margin-bottom: 15px;
 `;
 
+const FilterLabel = styled.label``;
+
 const PhoneBookInput = styled.input`
   width: 177px;
   margin-bottom: 15px;
@@ -17,4 +19,4 @@ const PhoneBookInput = styled.input`
   }
 `;
 
-export { FilterBox, PhoneBookInput };
+export { FilterBox, FilterLabel, PhoneBookInput };

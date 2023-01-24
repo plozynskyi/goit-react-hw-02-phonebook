@@ -5,9 +5,10 @@ import initialState from './initialState';
 
 import {
   PhoneBookForm,
-  NameTitle,
+  InputWrapper,
+  FormInputTitle,
   PhoneBookInput,
-  AddBtn,
+  ContactAddBtn,
 } from './phone-book-form.styled';
 
 class PhoneBooksForm extends Component {
@@ -39,8 +40,8 @@ class PhoneBooksForm extends Component {
 
     return (
       <PhoneBookForm action="" onSubmit={handleSubmit}>
-        <div>
-          <NameTitle>Name</NameTitle>
+        <InputWrapper>
+          <FormInputTitle>Name</FormInputTitle>
           <PhoneBookInput
             type="text"
             name="name"
@@ -50,9 +51,9 @@ class PhoneBooksForm extends Component {
             title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required
           />
-        </div>
-        <div>
-          <NameTitle>Number</NameTitle>
+        </InputWrapper>
+        <InputWrapper>
+          <FormInputTitle>Number</FormInputTitle>
           <PhoneBookInput
             type="tel"
             name="number"
@@ -62,8 +63,8 @@ class PhoneBooksForm extends Component {
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
           />
-        </div>
-        <AddBtn type="submit">Add contact</AddBtn>
+        </InputWrapper>
+        <ContactAddBtn type="submit">Add contact</ContactAddBtn>
       </PhoneBookForm>
     );
   }

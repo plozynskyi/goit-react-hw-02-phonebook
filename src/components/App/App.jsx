@@ -2,9 +2,9 @@ import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-import PhoneBookList from './PhoneBookList/PhoneBookList';
-import PhoneBookFilter from './PhoneBookFilter/PhoneBookFilter';
-import PhoneBooksForm from './PhoneBookForm/PhoneBookForm';
+import PhoneBookList from '../PhoneBookList/PhoneBookList';
+import PhoneBookFilter from '../PhoneBookFilter/PhoneBookFilter';
+import PhoneBooksForm from '../PhoneBookForm/PhoneBookForm';
 
 import {
   MainSection,
@@ -89,7 +89,7 @@ class App extends Component {
   render() {
     const { addContacts, removeContacts, handleFilter } = this;
     const items = this.getFilteredContacts();
-    const isBooks = Boolean(items.length);
+    const isContact = Boolean(items.length);
 
     return (
       <MainSection>
@@ -100,10 +100,10 @@ class App extends Component {
         <ContactsBox>
           <ContactsTitle>Contacts</ContactsTitle>
           <PhoneBookFilter handleChange={handleFilter} />
-          {isBooks && (
+          {isContact && (
             <PhoneBookList items={items} removeContacts={removeContacts} />
           )}
-          {!isBooks && <p>No contacts in list</p>}
+          {!isContact && <p>No contacts in list</p>}
         </ContactsBox>
       </MainSection>
     );

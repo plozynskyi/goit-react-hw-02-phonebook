@@ -19,6 +19,11 @@ const RemoveBtn = styled.button`
     color: rgba(0, 0, 255, 0.5);
     border: 1px solid rgba(0, 0, 255, 0.5);
   }
+  :active {
+    color: #fff;
+    border: 1px solid red;
+    background-color: red;
+  }
 `;
 
 export { ContactsList, ContactItem, RemoveBtn };
